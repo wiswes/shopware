@@ -1,0 +1,19 @@
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{% block base_body_inner %}
+    {{ parent() }}
+
+    {# WisWes chat widget — injected on every storefront page.
+
+       Replace YOUR_USER_TOKEN below with the widget token from your
+       WisWes dashboard (Settings → Widget). A later revision will
+       move this into a plugin config UI so merchants don't edit
+       Twig. #}
+    <script>
+        window.CHAT_WIDGET_CONFIG = {
+            userToken: 'YOUR_USER_TOKEN',
+            apiEndpoint: 'https://app.wiswes.com/api/chat'
+        };
+    </script>
+    <script src="https://app.wiswes.com/api/widget/embed.js?user_token=YOUR_USER_TOKEN" async></script>
+{% endblock %}
