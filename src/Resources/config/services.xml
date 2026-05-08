@@ -4,27 +4,44 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services
            http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <!-- Reads/writes the plugin's system_config entries. Wraps
-             SystemConfigService so callers don't need to remember the
-             config-key prefix. -->
+        <!-- ===== Phase 1 ===================================================== -->
+
         <service id="Wiswes\Widget\Service\ConfigReader">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
 
-        <!-- Storefront subscriber: injects the chat-widget <script> on every
-             page. Replaces the old static Twig override so the token is
-             read from system_config instead of being hardcoded. -->
         <service id="Wiswes\Widget\Storefront\Subscriber\WidgetInjectionSubscriber">
             <argument type="service" id="Wiswes\Widget\Service\ConfigReader"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <!-- Admin controller backing the "Install with WisWes" button.
-             Calls chat_agent's install endpoint, stores the returned
-             widget_token + tenant secret in system_config. -->
         <service id="Wiswes\Widget\Controller\Admin\InstallController" public="true">
             <argument type="service" id="Wiswes\Widget\Service\ConfigReader"/>
             <argument type="service" id="Symfony\Contracts\HttpClient\HttpClientInterface"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <!-- ===== Phase 2: PHP-side MCP endpoints chat_agent calls into ====== -->
+
+        <!-- Bearer-token gate. Every /api/_mcp/wiswes/* request must include
+             `Authorization: Bearer <tenantSecret>` where tenantSecret matches
+             the value the install handshake stored in system_config. Anything
+             else gets 401 before the controller runs. -->
+        <service id="Wiswes\Widget\Mcp\Http\BearerTokenSubscriber">
+            <argument type="service" id="Wiswes\Widget\Service\ConfigReader"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Cart tool surface. Mirrors Magento's Mcp/Tool/Cart/{Info,Add,
+             Update,Remove}Tool — but each is one Symfony route delegating
+             to Shopware's CartService instead of an in-process MCP server. -->
+        <service id="Wiswes\Widget\Controller\Mcp\CartController" public="true">
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextPersister"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\LineItemFactoryRegistry"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
             </call>

@@ -1,22 +1,22 @@
 // Registers the WisWes admin module — adds an entry under
 // Settings → Plugins so merchants can complete the install flow and
-// see connection status. Only the routing/menu wiring lives here; the
-// actual page UI is in `page/wiswes-widget-status/`.
+// see connection status.
 
 import './page/wiswes-widget-status';
+import enGB from './snippet/en-GB.json';
 
 const { Module } = Shopware;
 
 Module.register('wiswes-widget', {
     type: 'plugin',
-    name: 'WisWes',
+    name: 'WiswesWidget',
     title: 'wiswes-widget.general.mainMenuItemGeneral',
     description: 'wiswes-widget.general.descriptionTextModule',
     color: '#10b981',
     icon: 'regular-chat-bubble',
 
     snippets: {
-        'en-GB': require('./snippet/en-GB.json'),
+        'en-GB': enGB,
     },
 
     routes: {
