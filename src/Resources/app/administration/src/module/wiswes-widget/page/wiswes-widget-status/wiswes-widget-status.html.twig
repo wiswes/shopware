@@ -1,0 +1,69 @@
+{% block wiswes_widget_status %}
+<sw-page class="wiswes-widget-status">
+    <template #smart-bar-header>
+        <h2>{{ $tc('wiswes-widget.status.title') }}</h2>
+    </template>
+
+    <template #content>
+        <sw-card-view v-if="!loading">
+            {# ----- Not yet connected: show form + install button ----- #}
+            <sw-card v-if="!snapshot.isInstalled" :title="$tc('wiswes-widget.status.notConnectedHeading')">
+                <p class="sw-mb-m">{{ $tc('wiswes-widget.status.notConnectedBody') }}</p>
+
+                <sw-text-field
+                    v-model="shopUrl"
+                    :label="$tc('wiswes-widget.status.shopUrlLabel')"
+                    :placeholder="$tc('wiswes-widget.status.shopUrlPlaceholder')"
+                />
+
+                <sw-text-field
+                    v-model="adminEmail"
+                    :label="$tc('wiswes-widget.status.adminEmailLabel')"
+                    :placeholder="$tc('wiswes-widget.status.adminEmailPlaceholder')"
+                    type="email"
+                />
+
+                <sw-button
+                    variant="primary"
+                    :is-loading="installing"
+                    :disabled="installing || !adminEmail"
+                    @click="install"
+                >
+                    {{ installing ? $tc('wiswes-widget.status.installInProgress') : $tc('wiswes-widget.status.installButton') }}
+                </sw-button>
+            </sw-card>
+
+            {# ----- Connected: show status + manage links ----- #}
+            <sw-card v-else :title="$tc('wiswes-widget.status.connectedHeading')">
+                <p class="sw-mb-m">{{ $tc('wiswes-widget.status.connectedBody') }}</p>
+
+                <sw-description-list>
+                    <dt>{{ $tc('wiswes-widget.status.tenantSlugLabel') }}</dt>
+                    <dd>{{ snapshot.tenantSlug }}</dd>
+                </sw-description-list>
+
+                <div class="wiswes-widget-status__actions">
+                    <sw-button
+                        variant="primary"
+                        :link="dashboardUrl"
+                        target="_blank"
+                    >
+                        {{ $tc('wiswes-widget.status.openDashboardButton') }}
+                    </sw-button>
+
+                    <sw-button
+                        variant="danger"
+                        :is-loading="disconnecting"
+                        :disabled="disconnecting"
+                        @click="disconnect"
+                    >
+                        {{ $tc('wiswes-widget.status.disconnectButton') }}
+                    </sw-button>
+                </div>
+            </sw-card>
+        </sw-card-view>
+
+        <sw-loader v-else />
+    </template>
+</sw-page>
+{% endblock %}

@@ -1,10 +1,13 @@
 {
     "name": "wiswes/widget",
-    "description": "WisWes chat widget injection for Shopware storefront",
+    "description": "WisWes chat widget integration for Shopware 6 — one-click connect, storefront script injection, admin status page",
     "type": "shopware-platform-plugin",
     "license": "MIT",
+    "version": "0.2.0",
     "require": {
-        "shopware/core": "~6.5.0"
+        "shopware/core": "~6.5.0|~6.6.0",
+        "shopware/storefront": "~6.5.0|~6.6.0",
+        "shopware/administration": "~6.5.0|~6.6.0"
     },
     "autoload": {
         "psr-4": {
@@ -18,7 +21,7 @@
             "de-DE": "WisWes Chat Widget"
         },
         "description": {
-            "en-GB": "Embeds the WisWes chat widget into the storefront."
+            "en-GB": "Embeds the WisWes AI shopping assistant on the storefront. One-click connect from Settings → WisWes."
         }
     }
 }

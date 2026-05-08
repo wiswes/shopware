@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Connection</title>
+        <title lang="de-DE">Verbindung</title>
+
+        <input-field type="text">
+            <name>chatAgentBaseUrl</name>
+            <label>Chat agent base URL</label>
+            <label lang="de-DE">Chat-Agent Basis-URL</label>
+            <defaultValue>https://app.wiswes.com</defaultValue>
+            <helpText>Where the WisWes backend lives. Leave default unless you self-host.</helpText>
+        </input-field>
+
+        <input-field type="text">
+            <name>widgetToken</name>
+            <label>Widget token</label>
+            <label lang="de-DE">Widget-Token</label>
+            <helpText>Auto-populated by the "Install with WisWes" flow. Don't edit manually.</helpText>
+        </input-field>
+
+        <input-field type="text">
+            <name>tenantSlug</name>
+            <label>Tenant slug</label>
+            <helpText>Auto-populated by the install flow. Identifies your shop on app.wiswes.com.</helpText>
+        </input-field>
+
+        <input-field type="password">
+            <name>tenantSecret</name>
+            <label>Tenant secret</label>
+            <helpText>Auto-populated by the install flow. Used to authenticate chat_agent ↔ this Shopware extension.</helpText>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Storefront</title>
+
+        <input-field type="bool">
+            <name>injectOnStorefront</name>
+            <label>Show widget on storefront</label>
+            <label lang="de-DE">Widget im Storefront anzeigen</label>
+            <defaultValue>true</defaultValue>
+            <helpText>Toggle to hide the chat widget without uninstalling the plugin.</helpText>
+        </input-field>
+    </card>
+</config>

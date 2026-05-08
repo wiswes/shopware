@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+           http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!-- Reads/writes the plugin's system_config entries. Wraps
+             SystemConfigService so callers don't need to remember the
+             config-key prefix. -->
+        <service id="Wiswes\Widget\Service\ConfigReader">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <!-- Storefront subscriber: injects the chat-widget <script> on every
+             page. Replaces the old static Twig override so the token is
+             read from system_config instead of being hardcoded. -->
+        <service id="Wiswes\Widget\Storefront\Subscriber\WidgetInjectionSubscriber">
+            <argument type="service" id="Wiswes\Widget\Service\ConfigReader"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Admin controller backing the "Install with WisWes" button.
+             Calls chat_agent's install endpoint, stores the returned
+             widget_token + tenant secret in system_config. -->
+        <service id="Wiswes\Widget\Controller\Admin\InstallController" public="true">
+            <argument type="service" id="Wiswes\Widget\Service\ConfigReader"/>
+            <argument type="service" id="Symfony\Contracts\HttpClient\HttpClientInterface"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+    </services>
+</container>

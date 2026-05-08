@@ -1,0 +1,28 @@
+{
+    "wiswes-widget": {
+        "general": {
+            "mainMenuItemGeneral": "WisWes",
+            "descriptionTextModule": "Connect your storefront to the WisWes AI shopping assistant"
+        },
+        "status": {
+            "title": "WisWes Chat Widget",
+            "subtitle": "AI shopping assistant for your storefront",
+            "notConnectedHeading": "Not connected yet",
+            "notConnectedBody": "Click below to create your WisWes tenant and install the chat widget on your storefront. No manual configuration needed.",
+            "connectedHeading": "Connected",
+            "connectedBody": "The widget is live on your storefront. Manage prompts, intents, and analytics from your WisWes dashboard.",
+            "tenantSlugLabel": "Tenant",
+            "shopUrlLabel": "Shop URL",
+            "shopUrlPlaceholder": "https://your-shop.com",
+            "adminEmailLabel": "Your email",
+            "adminEmailPlaceholder": "you@your-shop.com",
+            "installButton": "Install with WisWes",
+            "installInProgress": "Connecting…",
+            "installSuccess": "Connected — your widget will appear on the storefront within a minute.",
+            "installError": "Could not connect to WisWes",
+            "disconnectButton": "Disconnect",
+            "disconnectConfirm": "Disconnect from WisWes? The widget will stop appearing on your storefront. Your tenant on app.wiswes.com is preserved so you can reconnect later.",
+            "openDashboardButton": "Open WisWes dashboard"
+        }
+    }
+}

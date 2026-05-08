@@ -1,19 +1,14 @@
 {% sw_extends '@Storefront/storefront/base.html.twig' %}
 
+{# Storefront subscriber sets `wiswesWidget` on the render context when
+   the merchant has completed the install flow + has the storefront
+   toggle enabled. If either condition fails, the parameter is null
+   and we render nothing. #}
+
 {% block base_body_inner %}
     {{ parent() }}
 
-    {# WisWes chat widget — injected on every storefront page.
-
-       Replace YOUR_USER_TOKEN below with the widget token from your
-       WisWes dashboard (Settings → Widget). A later revision will
-       move this into a plugin config UI so merchants don't edit
-       Twig. #}
-    <script>
-        window.CHAT_WIDGET_CONFIG = {
-            userToken: 'YOUR_USER_TOKEN',
-            apiEndpoint: 'https://app.wiswes.com/api/chat'
-        };
-    </script>
-    <script src="https://app.wiswes.com/api/widget/embed.js?user_token=YOUR_USER_TOKEN" async></script>
+    {% if wiswesWidget is defined and wiswesWidget.enabled %}
+        <script src="{{ wiswesWidget.baseUrl }}/api/widget/embed.js?user_token={{ wiswesWidget.token|escape('url') }}" async></script>
+    {% endif %}
 {% endblock %}
