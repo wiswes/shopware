@@ -1,0 +1,28 @@
+{
+    "wiswes-widget": {
+        "general": {
+            "mainMenuItemGeneral": "WisWes",
+            "descriptionTextModule": "Verbinde deinen Shop mit dem WisWes KI-Shopping-Assistenten"
+        },
+        "status": {
+            "title": "WisWes Chat-Widget",
+            "subtitle": "KI-Shopping-Assistent für deinen Storefront",
+            "notConnectedHeading": "Noch nicht verbunden",
+            "notConnectedBody": "Klicke unten, um deinen WisWes-Account zu erstellen und das Chat-Widget auf dem Storefront zu installieren. Keine manuelle Konfiguration nötig.",
+            "connectedHeading": "Verbunden",
+            "connectedBody": "Das Widget ist im Storefront aktiv. Verwalte Prompts, Intents und Analytics über dein WisWes-Dashboard.",
+            "tenantSlugLabel": "Tenant",
+            "shopUrlLabel": "Shop-URL",
+            "shopUrlPlaceholder": "https://dein-shop.de",
+            "adminEmailLabel": "Deine E-Mail",
+            "adminEmailPlaceholder": "du@dein-shop.de",
+            "installButton": "Mit WisWes installieren",
+            "installInProgress": "Verbinde…",
+            "installSuccess": "Verbunden — dein Widget erscheint innerhalb einer Minute auf dem Storefront.",
+            "installError": "Verbindung zu WisWes fehlgeschlagen",
+            "disconnectButton": "Trennen",
+            "disconnectConfirm": "Verbindung zu WisWes trennen? Das Widget wird nicht mehr im Storefront erscheinen. Dein Tenant auf app.wiswes.com bleibt erhalten, sodass du dich später wieder verbinden kannst.",
+            "openDashboardButton": "WisWes-Dashboard öffnen"
+        }
+    }
+}

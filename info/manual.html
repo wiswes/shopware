@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WisWes Chat Widget — Plugin Manual</title>
+<style>
+body { font-family: -apple-system, "Segoe UI", sans-serif; max-width: 760px; margin: 2em auto; line-height: 1.55; color: #1a1a1a; padding: 0 1em; }
+h1 { border-bottom: 2px solid #6951ff; padding-bottom: .3em; }
+h2 { color: #6951ff; margin-top: 2em; }
+code { background: #f4f4f4; padding: .15em .35em; border-radius: 3px; font-size: 95%; }
+pre { background: #f4f4f4; padding: 1em; border-radius: 6px; overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+th, td { border: 1px solid #ddd; padding: .5em .8em; text-align: left; }
+th { background: #fafafa; }
+.note { background: #fff7e6; border-left: 4px solid #f5a623; padding: .8em 1em; margin: 1em 0; }
+</style>
+</head>
+<body>
+
+<h1>WisWes Chat Widget — Manual</h1>
+
+<p>
+  This plugin embeds the <a href="https://wiswes.com">WisWes</a> AI
+  shopping assistant on your Shopware 6 storefront and exposes a
+  bearer-token-protected MCP tool surface so the assistant can operate
+  the cart, search the catalogue, drive checkout, and look up orders
+  on behalf of your shoppers — all backed by your store's live data.
+</p>
+
+<h2>Requirements</h2>
+<ul>
+  <li>Shopware <strong>6.5</strong> or <strong>6.6</strong></li>
+  <li>Outbound HTTPS access from your Shopware server to <code>https://app.wiswes.com</code></li>
+  <li>Inbound HTTPS access from <code>app.wiswes.com</code> to your storefront — the chat backend calls into <code>/wiswes/_mcp/*</code> to drive cart and checkout operations</li>
+  <li>An email address to receive the WisWes account confirmation (the plugin auto-creates a tenant on first install)</li>
+</ul>
+
+<h2>Installation</h2>
+<ol>
+  <li>Install the plugin via the Shopware Store (the standard one-click install) or via Composer:
+    <pre>composer require wiswes/shopware-mcp
+bin/console plugin:refresh
+bin/console plugin:install --activate WiswesWidget
+bin/console cache:clear</pre>
+  </li>
+  <li>In your Shopware admin: <strong>Settings → Plugins → WisWes</strong>.</li>
+  <li>Click the <strong>Install with WisWes</strong> button. The plugin opens a one-step form (your shop URL is pre-filled, you only need to confirm the admin email).</li>
+  <li>The plugin reaches out to <code>app.wiswes.com</code>, creates your tenant, and stores the widget token, tenant slug, and tenant secret in your shop's <code>system_config</code>.</li>
+  <li>Within ~30 seconds the chat bubble appears on every storefront page.</li>
+</ol>
+
+<div class="note">
+  <strong>No theme code edits needed.</strong> The plugin injects the
+  embed snippet via a kernel subscriber on the storefront's
+  <code>base_body_inner</code> block, the same hook every Shopware
+  theme inherits. If you've heavily customized your theme, double-check
+  that <code>{% block base_body_inner %}</code> is still extended; if
+  not, the widget won't render and you can fall back to manual injection
+  (see "Troubleshooting" below).
+</div>
+
+<h2>Configuration</h2>
+
+<p>Open <strong>Settings → Plugins → WisWes → Configure</strong>:</p>
+<table>
+  <tr><th>Field</th><th>Purpose</th></tr>
+  <tr><td><code>chatAgentBaseUrl</code></td><td>Where the WisWes backend lives. Default <code>https://app.wiswes.com</code> — only change if you self-host.</td></tr>
+  <tr><td><code>widgetToken</code></td><td>Auto-populated by Install. Identifies your shop to the chat backend.</td></tr>
+  <tr><td><code>tenantSlug</code></td><td>Auto-populated. Your shop's WisWes account name.</td></tr>
+  <tr><td><code>tenantSecret</code></td><td>Auto-populated. Bearer token the chat backend uses to call back into <code>/wiswes/_mcp/*</code>.</td></tr>
+  <tr><td><code>injectOnStorefront</code></td><td>Toggle the storefront widget on/off without uninstalling.</td></tr>
+</table>
+
+<h2>Manage the assistant</h2>
+
+<p>
+  Day-to-day configuration of prompts, intents, conversation flows,
+  FAQs, and analytics happens in the <strong>WisWes Dashboard</strong>
+  at <a href="https://app.wiswes.com">https://app.wiswes.com</a>. The
+  Shopware admin module's <strong>Open WisWes Dashboard</strong>
+  button takes you straight there with single-sign-on.
+</p>
+
+<h2>What the plugin exposes to the chat backend</h2>
+
+<p>Every endpoint below is protected by the per-tenant bearer token; the chat backend authenticates with
+<code>Authorization: Bearer &lt;tenantSecret&gt;</code> on every request.</p>
+
+<table>
+  <tr><th>Capability</th><th>Tools</th></tr>
+  <tr><td>Cart</td><td><code>cart_info</code> · <code>cart_add</code> · <code>cart_update</code> · <code>cart_remove</code></td></tr>
+  <tr><td>Catalogue</td><td><code>product_filter</code> · <code>product_get</code> · <code>category_list</code> · <code>product_filter_options</code></td></tr>
+  <tr><td>Checkout</td><td><code>payment_methods</code> · <code>shipping_methods</code> · <code>set_address</code> · <code>place_order</code></td></tr>
+  <tr><td>Sales</td><td><code>order_info</code> (guest order lookup by order number + email)</td></tr>
+</table>
+
+<h2>Privacy &amp; data handling</h2>
+<ul>
+  <li>The plugin sends <em>no shopper data</em> to WisWes on its own. Data only leaves your shop when a shopper opens the chat and asks something — and only the fields needed to answer their own question.</li>
+  <li>Cart and order operations run on your shop's actual cart context. The chat assistant cannot create parallel carts.</li>
+  <li>The <code>order_info</code> tool requires <em>both</em> the order number <em>and</em> the matching email. Either alone returns no data — preventing shoppers from fishing for orders by email or order number.</li>
+  <li>If you uninstall the plugin, the <code>system_config</code> rows are cleared. Your tenant on <code>app.wiswes.com</code> is preserved so a re-install reconnects to the same conversation history.</li>
+</ul>
+
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Symptom</th><th>Likely cause / fix</th></tr>
+  <tr>
+    <td>Chat bubble doesn't appear on the storefront</td>
+    <td>Confirm <strong>Show widget on storefront</strong> is on. Hard-refresh (Ctrl/Cmd-Shift-R). View page source — <code>window.CHAT_WIDGET_CONFIG</code> should be present. If not, your theme has skipped <code>base_body_inner</code>; manually paste the embed snippet from <strong>Settings → Plugins → WisWes</strong> into your theme's <code>base.html.twig</code>.</td>
+  </tr>
+  <tr>
+    <td>"Could not connect to WisWes" on Install</td>
+    <td>Outbound firewall blocking <code>app.wiswes.com</code>. Test from the server: <code>curl -I https://app.wiswes.com/api/widget/install-info</code>.</td>
+  </tr>
+  <tr>
+    <td>Chat answers about your catalogue are wrong / missing</td>
+    <td>Open the WisWes Dashboard → Tools → click <strong>Sync from MCP</strong>. The dashboard re-reads your shop's tool list and refreshes the cache.</td>
+  </tr>
+  <tr>
+    <td>Want to disconnect</td>
+    <td><strong>Settings → Plugins → WisWes → Disconnect</strong> clears the local config but preserves your tenant on <code>app.wiswes.com</code>.</td>
+  </tr>
+</table>
+
+<h2>Support</h2>
+
+<p>
+  Email <a href="mailto:services@wiswes.com">services@wiswes.com</a> for
+  bug reports, feature requests, or onboarding help. Documentation is
+  at <a href="https://wiswes.com/install/shopware">wiswes.com/install/shopware</a>.
+</p>
+
+</body>
+</html>

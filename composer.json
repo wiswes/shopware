@@ -29,7 +29,16 @@
             "de-DE": "WisWes Chat Widget"
         },
         "description": {
-            "en-GB": "Embeds the WisWes AI shopping assistant on the storefront. One-click connect from Settings → WisWes."
+            "en-GB": "Embeds the WisWes AI shopping assistant on the storefront. One-click connect from Settings → WisWes.",
+            "de-DE": "Bettet den WisWes KI-Shopping-Assistenten im Storefront ein. Ein-Klick-Verbindung über Einstellungen → WisWes."
+        },
+        "manufacturerLink": {
+            "en-GB": "https://wiswes.com",
+            "de-DE": "https://wiswes.com"
+        },
+        "supportLink": {
+            "en-GB": "https://wiswes.com/install/shopware",
+            "de-DE": "https://wiswes.com/install/shopware"
         }
     }
 }

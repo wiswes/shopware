@@ -3,6 +3,11 @@
 # install time by anyone running the standard plugin install commands.
 src/Resources/public/
 
+# Marketplace ZIPs produced by bin/build-marketplace-zip.sh — built on
+# demand for upload, not committed.
+build/
+*.zip
+
 # IDE
 .idea/
 .vscode/
