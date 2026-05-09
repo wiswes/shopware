@@ -128,7 +128,16 @@ class CheckoutController extends AbstractController
         $email = trim((string) ($body['email'] ?? ''));
         $first = trim((string) ($body['first_name'] ?? ''));
         $last = trim((string) ($body['last_name'] ?? ''));
+        // Accept either flat fields (street/zipcode/city/country_iso2 at
+        // the top level — matches the MCP tool schema chat_agent sends)
+        // or a nested `billing` object (legacy callers / direct-curl).
         $billing = (array) ($body['billing'] ?? []);
+        $billing = [
+            'street' => trim((string) ($billing['street'] ?? $body['street'] ?? '')),
+            'zipcode' => trim((string) ($billing['zipcode'] ?? $body['zipcode'] ?? '')),
+            'city' => trim((string) ($billing['city'] ?? $body['city'] ?? '')),
+            'country_iso2' => trim((string) ($billing['country_iso2'] ?? $body['country_iso2'] ?? '')),
+        ];
 
         foreach (['email' => $email, 'first_name' => $first, 'last_name' => $last] as $k => $v) {
             if ($v === '') {
@@ -136,8 +145,8 @@ class CheckoutController extends AbstractController
             }
         }
         foreach (['street', 'zipcode', 'city', 'country_iso2'] as $k) {
-            if (trim((string) ($billing[$k] ?? '')) === '') {
-                return new JsonResponse(['error' => "billing.$k is required"], 400);
+            if ($billing[$k] === '') {
+                return new JsonResponse(['error' => "$k is required"], 400);
             }
         }
 
