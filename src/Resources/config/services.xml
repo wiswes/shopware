@@ -46,5 +46,18 @@
                 <argument type="service" id="service_container"/>
             </call>
         </service>
+
+        <!-- Phase 3: catalog tools — product search/get, category list,
+             filter facets. Read-only; uses Shopware's Store API routes
+             so the data shape matches what the storefront sees. -->
+        <service id="Wiswes\Widget\Controller\Mcp\CatalogController" public="true">
+            <argument type="service" id="Shopware\Core\Content\Product\SalesChannel\Listing\ProductListingRoute"/>
+            <argument type="service" id="Shopware\Core\Content\Product\SalesChannel\Detail\ProductDetailRoute"/>
+            <argument type="service" id="Shopware\Core\Content\Category\SalesChannel\NavigationRoute"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
     </services>
 </container>
