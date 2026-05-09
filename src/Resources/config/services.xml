@@ -59,5 +59,30 @@
                 <argument type="service" id="service_container"/>
             </call>
         </service>
+
+        <!-- Phase 5: sales tools — guest order lookup by
+             order_number + email pair. -->
+        <service id="Wiswes\Widget\Controller\Mcp\SalesController" public="true">
+            <argument type="service" id="order.repository"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <!-- Phase 4: checkout tools — payment/shipping methods,
+             guest-address registration, order placement. Guest flow
+             only; logged-in customers fall back to the storefront's
+             native checkout UI. -->
+        <service id="Wiswes\Widget\Controller\Mcp\CheckoutController" public="true">
+            <argument type="service" id="Shopware\Core\Checkout\Payment\SalesChannel\PaymentMethodRoute"/>
+            <argument type="service" id="Shopware\Core\Checkout\Shipping\SalesChannel\ShippingMethodRoute"/>
+            <argument type="service" id="Shopware\Core\Checkout\Customer\SalesChannel\RegisterRoute"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartOrderRoute"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
     </services>
 </container>
