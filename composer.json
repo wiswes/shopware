@@ -1,9 +1,17 @@
 {
-    "name": "wiswes/widget",
-    "description": "WisWes chat widget integration for Shopware 6 — one-click connect, storefront script injection, admin status page",
+    "name": "wiswes/shopware-mcp",
+    "description": "WisWes chat widget integration for Shopware 6 — one-click connect, storefront script injection, PHP MCP endpoints (cart, catalog, checkout, orders), admin status page",
     "type": "shopware-platform-plugin",
     "license": "MIT",
-    "version": "0.2.0",
+    "version": "0.3.0",
+    "homepage": "https://wiswes.com",
+    "support": {
+        "issues": "https://github.com/wiswes/shopware/issues",
+        "source": "https://github.com/wiswes/shopware",
+        "docs": "https://wiswes.com/install/shopware",
+        "email": "services@wiswes.com"
+    },
+    "keywords": ["shopware", "shopware6", "shopware-6", "mcp", "model-context-protocol", "wiswes", "ecommerce", "ai", "chatbot", "chat-widget"],
     "require": {
         "shopware/core": "~6.5.0|~6.6.0",
         "shopware/storefront": "~6.5.0|~6.6.0",

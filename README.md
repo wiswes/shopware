@@ -29,7 +29,7 @@ The plugin is structurally aligned with the [WisWes Magento extension](https://g
 From your Shopware project root:
 
 ```bash
-composer require wiswes/widget
+composer require wiswes/shopware-mcp
 bin/console plugin:refresh
 bin/console plugin:install --activate WiswesWidget
 bin/console cache:clear
